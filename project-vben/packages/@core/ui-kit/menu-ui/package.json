@@ -1,0 +1,48 @@
+{
+  "name": "@vben-core/menu-ui",
+  "version": "1.0.0",
+  "homepage": "https://codeup.aliyun.com/620b6ba19d9cd9dd5cd980e2/alumni/alumni-webui",
+  "bugs": "https://codeup.aliyun.com/620b6ba19d9cd9dd5cd980e2/alumni/alumni-webui/issues",
+  "repository": {
+    "type": "git",
+    "url": "git@codeup.aliyun.com:620b6ba19d9cd9dd5cd980e2/alumni/alumni-webui.git",
+    "directory": "packages/@core/ui-kit/menu-ui"
+  },
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm unbuild",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "default": "./dist/index.mjs"
+      }
+    }
+  },
+  "dependencies": {
+    "@vben-core/composables": "workspace:*",
+    "@vben-core/icons": "workspace:*",
+    "@vben-core/shadcn-ui": "workspace:*",
+    "@vben-core/shared": "workspace:*",
+    "@vben-core/typings": "workspace:*",
+    "@vueuse/core": "catalog:",
+    "vue": "catalog:"
+  }
+}

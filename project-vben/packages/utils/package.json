@@ -1,0 +1,27 @@
+{
+  "name": "@vben/utils",
+  "version": "1.0.0",
+  "homepage": "https://codeup.aliyun.com/620b6ba19d9cd9dd5cd980e2/alumni/alumni-webui",
+  "bugs": "https://codeup.aliyun.com/620b6ba19d9cd9dd5cd980e2/alumni/alumni-webui/issues",
+  "repository": {
+    "type": "git",
+    "url": "git@codeup.aliyun.com:620b6ba19d9cd9dd5cd980e2/alumni/alumni-webui.git",
+    "directory": "packages/utils"
+  },
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@vben-core/shared": "workspace:*",
+    "@vben-core/typings": "workspace:*",
+    "vue-router": "catalog:"
+  }
+}

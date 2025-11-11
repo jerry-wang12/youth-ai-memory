@@ -1,0 +1,174 @@
+/**
+ * DetailModal 详情样式模板
+ *
+ * 使用方法：
+ * 1. 复制此文件内容到您的组件 <style scoped>标签中
+ * 2. 或者在页面中直接引用这些样式类
+ *
+ * 注意：使用 scoped 样式时确保样式在组件内部生效
+ */
+
+/* ==================== 响应式设计 ==================== */
+
+/* 平板和移动设备 */
+@media (max-width: 768px) {
+  .detail-form-container {
+    padding: 16px;
+  }
+
+  .detail-field-group {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 16px 0;
+  }
+
+  .detail-field-label {
+    font-size: 12px;
+  }
+
+  .detail-field-value {
+    font-size: 14px;
+  }
+}
+
+/* ==================== 容器样式 ==================== */
+
+/* 详情表单容器 */
+.detail-form-container {
+  padding: 24px;
+}
+
+/* ==================== 字段组 ==================== */
+
+/* 字段组容器 - 响应式网格布局 */
+.detail-field-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+/* 最后一组字段不显示底部边框 */
+.detail-field-group:last-child {
+  border-bottom: none;
+}
+
+/* ==================== 字段项 ==================== */
+
+/* 单个字段容器 */
+.detail-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 占满整行的字段 */
+.detail-field-full {
+  grid-column: 1 / -1;
+}
+
+/* ==================== 字段标签 ==================== */
+
+/* 字段标签样式 */
+.detail-field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: hsl(var(--muted-foreground));
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ==================== 字段值 ==================== */
+
+/* 字段值容器 */
+.detail-field-value {
+  font-size: 15px;
+  line-height: 1.6;
+  color: hsl(var(--foreground));
+}
+
+/* 长文本字段值 */
+.detail-field-text {
+  line-height: 1.8;
+}
+
+/* ==================== 标签样式 ==================== */
+
+/* 胶囊标签 - 用于状态、类型等 */
+.detail-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 13px;
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / 10%);
+  border-radius: 6px;
+}
+
+/* 成功状态标签 */
+.detail-tag-success {
+  color: hsl(var(--success));
+  background: hsl(var(--success) / 10%);
+}
+
+/* 警告状态标签 */
+.detail-tag-warning {
+  color: hsl(var(--warning));
+  background: hsl(var(--warning) / 10%);
+}
+
+/* 错误状态标签 */
+.detail-tag-error {
+  color: hsl(var(--destructive));
+  background: hsl(var(--destructive) / 10%);
+}
+
+/* ==================== 可选样式 ==================== */
+
+/* 图片字段 */
+.detail-field-image img {
+  max-width: 200px;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+.detail-field-image img:hover {
+  transform: scale(1.05);
+}
+
+/* 链接字段 */
+.detail-field-link a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  transition: opacity 0.2s ease;
+}
+
+.detail-field-link a:hover {
+  opacity: 0.8;
+}
+
+/* 附件列表 */
+.detail-attachment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-attachment-item {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 12px;
+  background: hsl(var(--muted) / 30%);
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.detail-attachment-item:hover {
+  background: hsl(var(--muted) / 50%);
+}
+
+/* 富文本内容 */
+.detail-rich-content {
+  line-height: 1.8;
+}

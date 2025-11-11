@@ -1,0 +1,376 @@
+---
+alwaysApply: true
+---
+
+# Alumni WebUI 项目开发规范
+
+最后更新：2025-10-15
+
+## 技术栈
+
+- **前端框架**: Vue 3 + Composition API
+- **类型系统**: TypeScript 5.x
+- **UI 组件库**: Ant Design Vue 4.x
+- **样式方案**: Tailwind CSS 3.x
+- **图标系统**: unplugin-icons + @iconify/vue
+- **富文本编辑**: Quill
+- **构建工具**: Vite
+- **包管理**: pnpm (workspace)
+
+## ⚠️ 强制性规则
+
+### 1. 列表页面必须使用 TableLayout
+
+**规则**: 所有 CRUD 列表页面**必须**使用 `TableLayout` 组件，**禁止**直接使用 `<a-table>`。
+
+**原因**:
+- 统一的用户体验和 UI 设计
+- 内置搜索、筛选、快速筛选、分页功能
+- 更好的代码复用性和可维护性
+
+**✅ 正确**:
+```vue
+<script setup lang="ts">
+import { TableLayout } from '#/components/TableLayout';
+import type { ActionButton } from '#/components/TableLayout/TableHeader';
+</script>
+
+<template>
+  <div class="page-container">
+    <TableLayout
+      title="数据列表"
+      :columns="columns"
+      :data-source="dataSource"
+      :action-buttons="actionButtons"
+    />
+  </div>
+</template>
+```
+
+**❌ 错误**:
+```vue
+<template>
+  <a-table :columns="columns" :data-source="dataSource" />
+</template>
+```
+
+### 2. 详情展示必须使用 DetailModal
+
+**规则**: 所有数据详情展示**必须**使用 `DetailModal` 组件，**禁止**使用 `<a-modal>` 展示详情。
+
+**原因**:
+- 统一的详情展示样式
+- 表单式布局，高信息密度
+- 支持 flat 和 tabs 两种布局模式
+
+**✅ 正确**:
+```vue
+<script setup lang="ts">
+import { DetailModal } from '#/components/DetailModal';
+import type { DetailHeader } from '#/components/DetailModal';
+
+const detailHeader = computed<DetailHeader>(() => ({
+  title: detailData.value?.title || '',
+  subtitle: detailData.value?.subtitle,
+  createdAt: detailData.value?.createdAt,
+}));
+</script>
+
+<template>
+  <DetailModal v-model:visible="visible" :header="detailHeader">
+    <template #content>
+      <div class="detail-form-container">
+        <!-- 详情内容 -->
+</div>
+    </template>
+  </DetailModal>
+</template>
+```
+
+**❌ 错误**:
+```vue
+<template>
+  <a-modal v-model:open="visible">
+    <div>{{ detailData }}</div>
+  </a-modal>
+</template>
+```
+
+**注意**: 新增/编辑表单弹窗仍可使用 `<a-modal>`，因为那是表单编辑场景。
+
+### 3. 文件上传必须使用 AttachmentUpload
+
+**规则**: 所有文件上传功能**必须**使用 `AttachmentUpload` 组件，**禁止**直接使用 `<a-upload>` 或 `<input type="file">`。
+
+**原因**:
+- 统一的上传交互和 UI 设计
+- 内置拖拽、粘贴上传功能
+- 自动处理文件验证、进度显示、预览下载
+- 与后端 API 完美适配
+
+**✅ 正确**:
+```vue
+<script setup lang="ts">
+import type { UploadResponse } from '#/api/core/upload';
+import { AttachmentUpload } from '#/components/AttachmentUpload';
+
+const fileList = ref<UploadResponse[]>([]);
+</script>
+
+<template>
+  <AttachmentUpload
+    v-model="fileList"
+    accept="image/*,.pdf"
+    :max-size="10"
+    :max-count="5"
+  />
+</template>
+```
+
+**❌ 错误**:
+```vue
+<template>
+  <a-upload :file-list="fileList" @change="handleUpload">
+    <a-button>上传文件</a-button>
+  </a-upload>
+</template>
+```
+
+**常用配置**:
+```vue
+<!-- 图片上传 -->
+<AttachmentUpload v-model="images" accept="image/*" :max-size="5" list-type="picture-card" />
+
+<!-- 文档上传 -->
+<AttachmentUpload v-model="documents" accept=".pdf,.doc,.docx" :max-size="10" />
+
+<!-- 单文件上传 -->
+<AttachmentUpload v-model="file" :multiple="false" :max-count="1" upload-mode="button" />
+```
+
+### 4. 必须遵循 API 接口规范
+
+**规则**: 所有 API 接口信息从本地 Swagger/OpenAPI 文档获取，确保使用最新的接口定义。
+
+- **原则**: 开发前必须直接读取 `docs/swagger/` 目录下的 Swagger JSON 文件
+- **禁止**随意添加或假设接口，必须基于实际的 Swagger 定义
+
+#### 本地 Swagger 文档位置
+
+**可用的 Swagger 文档文件：**
+
+1. **管理端 API**: `docs/swagger/admin-api.json`
+   - **在线文档**: https://job2.powerei.cn/alumni/api/v3/api-docs/admin
+   - **包含**: 用户管理、角色管理、权限管理、校友管理、活动管理、客房管理等
+
+2. **微信小程序 API**: `docs/swagger/wechat-api.json`
+   - **在线文档**: https://job2.powerei.cn/alumni/api/v3/api-docs/wechat
+   - **包含**: 活动相关、客房相关、消息管理等接口
+
+3. **公共 API**: `docs/swagger/common-api.json`
+   - **在线文档**: https://job2.powerei.cn/alumni/api/v3/api-docs/common
+   - **包含**: 文件上传、对象信息获取等
+
+#### 如何使用 Swagger 文档
+
+**标准流程（必须遵循）：**
+
+1. **读取本地 Swagger JSON 文件**
+   ```typescript
+   // 使用 read_file 工具直接读取
+   read_file('docs/swagger/admin-api.json')
+   ```
+
+2. **如果本地文件不存在或过期，运行同步脚本**
+   ```bash
+   ./scripts/sync-swagger.sh
+   ```
+   此脚本会从后端 API 下载最新的 Swagger 文档到本地。
+
+3. **解析 JSON 内容**
+   - 查找需要的接口定义（`paths` 字段）
+   - 查找数据模型定义（`components.schemas` 字段）
+   - 理解请求参数和响应格式
+
+**重要提醒：**
+
+- ✅ **必须**直接读取 `docs/swagger/*.json` 文件内容
+- ✅ 接口路径、参数名、类型必须与 Swagger 定义完全一致
+- ✅ 如果本地文档过期，运行 `./scripts/sync-swagger.sh` 更新
+- ✅ 如果 Swagger 中没有需要的接口，需要先与后端确认
+- ❌ **禁止**使用网络搜索或联网获取文档
+- ❌ **禁止**假设或猜测接口格式
+- ❌ **禁止**使用可能过时的静态文档（如 `docs/技术文档/API接口文档.md`）
+
+#### 开发流程
+
+1. **读取 Swagger 文档**：使用 `read_file` 工具读取对应的本地 JSON 文件
+2. **解析接口定义**：理解接口路径、方法、参数、请求体、响应格式
+3. **生成类型定义**：基于 Swagger schema 创建 TypeScript 类型
+4. **实现 API 调用**：编写符合接口规范的请求代码
+5. **验证正确性**：确保代码与 Swagger 定义一致
+
+#### Swagger 文档关键信息
+
+从 Swagger JSON 中需要关注的关键信息：
+
+- `paths`: 所有接口路径和方法定义
+- `components.schemas`: 数据模型定义
+- `parameters`: 请求参数定义
+- `requestBody`: 请求体格式
+- `responses`: 响应格式和状态码
+- `tags`: 接口分组信息
+
+### 5. 页面必须有根容器
+
+**规则**: 所有页面组件**必须**有根容器元素。
+
+**原因**: 避免 Vue Transition 警告，确保路由切换动画正常。
+
+```vue
+<!-- ✅ 正确 -->
+<template>
+  <div class="page-container">
+    <TableLayout ... />
+  </div>
+</template>
+
+<!-- ❌ 错误 -->
+<template>
+  <TableLayout ... />
+</template>
+```
+
+## 核心开发规范
+
+### 样式规范
+
+- **主题色**: 使用主题色变量 `hsl(var(--primary))`，方便主题切换
+- **色系**: 优先使用 Morandi 柔和色系
+- **避免**: 亮红色、亮橙色等过于鲜艳的颜色
+- **禁止**: 硬编码颜色
+
+```css
+/* ✅ 推荐 */
+background-color: hsl(var(--primary));
+
+/* ❌ 避免 */
+background-color: #FF0000;
+```
+
+### 图标规范
+
+**规则**: 图标统一在 `src/icons/index.ts` 中管理，使用 `createIconifyIcon` 创建。
+
+**为什么？**
+- 统一的图标管理和导入
+- 按需加载，减小打包体积
+- 易于维护和查找
+
+**使用方式**:
+
+```typescript
+// ✅ 正确：从 #/icons 导入
+import { MdiMagnify, MdiPlus, MdiClose } from '#/icons';
+
+// ❌ 错误：直接使用 @vben/icons
+import { MdiMagnify } from '@vben/icons';
+
+// ❌ 错误：使用原始 SVG
+import { MagnifyIcon } from '@/assets/icons/magnify.svg';
+```
+
+**添加新图标**:
+
+1. 访问 https://icon-sets.iconify.design/
+2. 搜索需要的图标（推荐 Material Design Icons - mdi）
+3. 在 `src/icons/index.ts` 中添加：
+
+```typescript
+import { createIconifyIcon } from '@vben/icons';
+
+/** 新图标说明 */
+export const MdiIconName = createIconifyIcon('mdi:icon-name');
+```
+
+**命名规范**:
+- PascalCase 命名
+- 格式：`{IconSet}{IconName}`
+- 示例：`MdiMagnify`, `LucideSearch`
+
+**推荐图标集**:
+- `mdi`: Material Design Icons（最全面，推荐）
+- `lucide`: Lucide Icons（简洁美观）
+- `carbon`: Carbon Icons（IBM设计）
+- `heroicons`: Heroicons（Tailwind官方）
+
+**风格要求**:
+- 优先使用 outline（轮廓）风格
+- 避免使用 filled（填充）风格
+- 示例：`mdi:account-outline` ✅  而非 `mdi:account` ❌
+
+### 类型安全
+
+- **必须**: 所有组件 props 必须有 TypeScript 类型定义
+- **必须**: 所有 API 请求和响应必须有类型定义
+- **推荐**: 使用 `type` 导入类型
+
+```typescript
+import type { TableLayoutProps } from '#/components/TableLayout';
+import type { ActionButton, FilterField } from '#/components/TableLayout/TableHeader';
+```
+
+## 代码审查检查项
+
+开发任何列表页面时，必须通过以下检查：
+
+- [ ] 是否使用了 `TableLayout` 组件？（而非 `<a-table>`）
+- [ ] 是否使用了 `DetailModal` 组件展示详情？（而非 `<a-modal>`）
+- [ ] 是否使用了 `AttachmentUpload` 组件？（而非 `<a-upload>` 或 `<input type="file">`）
+- [ ] 页面是否有根容器元素？
+- [ ] 图标是否使用 outline 风格？
+- [ ] 是否使用了主题色变量而非硬编码颜色？
+- [ ] TypeScript 类型是否完整？
+- [ ] API 接口是否符合 Swagger 文档定义？
+
+## 🎯 模板优先原则
+
+开发任何功能前，**必须**先查找并参考模板库中的实现：
+
+### 开发流程
+
+1. **查找模板**：使用 `read_file` 工具读取 `.specify/templates/project/README.md`
+2. **参考实现**：查找相关组件、API、页面模板
+3. **优先使用**：直接使用或基于模板调整，避免从零开发
+4. **保持一致**：确保实现方式与模板库保持一致
+
+### 模板库位置
+
+- **总览文档**: `.specify/templates/project/README.md` - 完整的模板库使用手册
+- **组件模板**: `.specify/templates/project/components/` - TableLayout、DetailModal、AttachmentUpload 等
+- **页面示例**: `.specify/templates/project/pages/tag-management/` - 完整的 CRUD 实现参考
+- **API 示例**: `.specify/templates/project/api/` - 标签 API、文件上传 API
+- **详细指南**: `.specify/templates/project/docs/` - 表格生成指南、详情弹窗指南等
+
+### 常见场景对应模板
+
+| 场景 | 必读模板 |
+|------|---------|
+| 创建列表页 | `.specify/templates/project/components/TableLayout/` + `pages/tag-management/` |
+| 展示详情 | `.specify/templates/project/components/DetailModal/` |
+| 文件上传 | `.specify/templates/project/components/AttachmentUpload/` |
+| 实现 API | `.specify/templates/project/api/tags.ts` |
+| 富文本编辑 | `.specify/templates/project/components/RichEditor/` |
+
+**重要**：遇到列表页、详情弹窗、文件上传等常见场景时，必须先查阅模板库，不要自己实现。
+
+## 📚 Swagger API 文档位置
+
+所有 API 接口必须基于本地 Swagger 文档定义：
+
+- `docs/swagger/admin-api.json` - 管理端 API（用户、角色、权限、校友、活动、客房）
+- `docs/swagger/wechat-api.json` - 微信小程序 API（活动、客房、消息）
+- `docs/swagger/common-api.json` - 公共 API（认证、文件上传）
+
+更新文档：`./scripts/sync-swagger.sh`
+

@@ -207,6 +207,244 @@ const handleClose = (id: string) => {
 - `@close`: 删除事件
 - `@click`: 点击事件
 
+### DetailDrawer
+
+抽屉弹窗组件，与 DetailModal 类似，但以 Drawer 形式从右侧滑出。
+
+**主要特性：**
+
+- ✨ 表单式布局，高信息密度
+- 📑 支持 flat 和 tabs 两种布局模式
+- 🎨 优雅的视觉设计
+- 📱 响应式设计
+- 🎯 支持水印和自定义 Footer
+
+**使用示例：**
+
+```vue
+<script setup lang="ts">
+import { DetailDrawer } from '@/components/DetailDrawer';
+import type { DetailHeader } from '@/components/DetailDrawer';
+
+const visible = ref(false);
+const header: DetailHeader = {
+  title: '详情标题',
+  subtitle: '副标题信息',
+  createdAt: '2024-01-01 10:00:00',
+};
+</script>
+
+<template>
+  <DetailDrawer
+    v-model:visible="visible"
+    :header="header"
+    layout="flat"
+    width="70vw"
+  >
+    <template #content>
+      <div class="p-6">详情内容...</div>
+    </template>
+  </DetailDrawer>
+</template>
+```
+
+### EmptyState
+
+空状态组件，美观的空状态展示，适用于列表为空、搜索无结果等场景。
+
+**主要特性：**
+
+- 🎨 现代化设计风格
+- 🖼️ 6 种预设图标（folder、document、message、notification、search、wallet）
+- 🔧 支持自定义图标组件
+- 📝 可自定义标题和描述
+- 🎯 操作区域插槽
+
+**使用示例：**
+
+```vue
+<script setup lang="ts">
+import { EmptyState } from '@/components/EmptyState';
+</script>
+
+<template>
+  <!-- 基础用法 -->
+  <EmptyState />
+
+  <!-- 自定义文案 -->
+  <EmptyState
+    title="暂无搜索结果"
+    description="请尝试其他关键词"
+    icon-type="search"
+  />
+
+  <!-- 带操作按钮 -->
+  <EmptyState
+    title="暂无数据"
+    description="点击下方按钮添加新数据"
+    icon-type="folder"
+  >
+    <template #action>
+      <a-button type="primary">添加数据</a-button>
+    </template>
+  </EmptyState>
+
+  <!-- 自定义图标 -->
+  <EmptyState
+    title="暂无消息"
+    description="当前没有任何消息"
+    :icon="CustomIcon"
+  />
+</template>
+```
+
+**Props：**
+
+- `title`: 标题（默认：'暂无数据'）
+- `description`: 描述信息（默认：'当前没有任何内容'）
+- `iconType`: 预设图标类型（'folder' | 'document' | 'message' | 'notification' | 'search' | 'wallet'，默认：'folder'）
+- `icon`: 自定义图标组件（优先级高于 iconType）
+
+**Slots：**
+
+- `#action`: 操作区域（如按钮）
+
+### FilterForm
+
+通用筛选表单组件，支持多种字段类型，可展开/收缩。
+
+**主要特性：**
+
+- 📝 支持 input、select、date、dateRange 等字段类型
+- 📱 支持展开/收缩功能
+- 🎨 响应式布局设计
+- 🔄 内置搜索、重置、刷新功能
+
+**使用示例：**
+
+```vue
+<script setup lang="ts">
+import { FilterForm } from '@/components/FilterForm';
+import type { FilterField } from '@/components/FilterForm';
+
+const filterFields: FilterField[] = [
+  { key: 'keyword', type: 'input', label: '关键词' },
+  {
+    key: 'status',
+    type: 'select',
+    label: '状态',
+    options: [
+      { label: '启用', value: 'enabled' },
+      { label: '禁用', value: 'disabled' },
+    ],
+  },
+];
+</script>
+
+<template>
+  <FilterForm
+    :fields="filterFields"
+    @search="handleSearch"
+    @reset="handleReset"
+  />
+</template>
+```
+
+### MediaPreview
+
+媒体预览组件，支持图片/视频/音频的全屏预览。
+
+**主要特性：**
+
+- 🖼️ 支持图片、视频、音频预览
+- 🔍 支持图片缩放（滚轮、按钮）
+- ⌨️ 支持键盘快捷键（方向键切换、Esc关闭）
+- 📥 支持下载功能
+
+**使用示例：**
+
+```vue
+<script setup lang="ts">
+import { MediaPreview } from '@/components/MediaPreview';
+
+const visible = ref(false);
+const mediaItems = [
+  { url: '/image.jpg', name: '图片', type: 'image' },
+];
+</script>
+
+<template>
+  <MediaPreview
+    v-model:visible="visible"
+    :items="mediaItems"
+    :current="0"
+  />
+</template>
+```
+
+### AttachmentPreview
+
+附件预览组件，展示已上传的附件列表。
+
+**主要特性：**
+
+- 🖼️ 支持图片缩略图预览
+- 📄 支持多种文件类型图标
+- 👁️ 图片点击可全屏预览
+- 📥 非图片文件点击可下载
+
+**使用示例：**
+
+```vue
+<script setup lang="ts">
+import { AttachmentPreview } from '@/components/AttachmentPreview';
+
+const attachments = [
+  { filename: 'photo.jpg', url: '/photo.jpg', type: 'image/jpeg', size: 1024 },
+];
+</script>
+
+<template>
+  <AttachmentPreview :attachments="attachments" :max-display="4" />
+</template>
+```
+
+### Timeline
+
+时间轴组件，按日期分组展示记录。
+
+**主要特性：**
+
+- 📅 按年/月/日自动分组
+- 🎨 支持不同类型的节点颜色
+- 📎 支持附件展示
+- 🔧 支持自定义操作按钮
+
+**使用示例：**
+
+```vue
+<script setup lang="ts">
+import { Timeline } from '@/components/Timeline';
+import type { TimelineItem } from '@/components/Timeline';
+
+const items: TimelineItem[] = [
+  {
+    id: 1,
+    title: '第一次记录',
+    content: '记录内容...',
+    time: '2024-01-15 14:30:00',
+    type: 'talk',
+  },
+];
+</script>
+
+<template>
+  <Timeline :items="items" @item-click="handleItemClick" />
+</template>
+```
+
+**详细文档：** [`../docs/new-components-guide.md`](../docs/new-components-guide.md)
+
 ### RichEditor
 
 富文本编辑器组件，基于 Quill 实现，提供完整的富文本编辑功能。
@@ -343,13 +581,17 @@ const handleSave = () => {
 // 导入单个组件
 import { TableLayout } from '@/components/TableLayout';
 import { DetailModal } from '@/components/DetailModal';
+import { DetailDrawer } from '@/components/DetailDrawer';
 import { CustomTag } from '@/components/CustomTag';
+import { EmptyState } from '@/components/EmptyState';
 import { RichEditor } from '@/components/RichEditor';
 
 // 导入类型
 import type { TableLayoutProps } from '@/components/TableLayout';
 import type { DetailHeader, DetailTab } from '@/components/DetailModal';
+import type { DetailHeader as DrawerDetailHeader } from '@/components/DetailDrawer';
 import type { CustomTagProps } from '@/components/CustomTag';
+import type { EmptyStateProps } from '@/components/EmptyState';
 import type { RichEditorProps } from '@/components/RichEditor';
 ```
 
@@ -414,8 +656,14 @@ import type {
 // DetailModal 类型
 import type { DetailHeader, DetailTab } from '@/components/DetailModal';
 
+// DetailDrawer 类型
+import type { DetailHeader as DrawerDetailHeader, DetailTab as DrawerDetailTab } from '@/components/DetailDrawer';
+
 // CustomTag 类型
 import type { CustomTagProps } from '@/components/CustomTag';
+
+// EmptyState 类型
+import type { EmptyStateProps } from '@/components/EmptyState';
 
 // RichEditor 类型
 import type { RichEditorProps } from '@/components/RichEditor';

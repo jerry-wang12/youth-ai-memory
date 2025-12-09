@@ -10,5 +10,18 @@
     "title": "概览",
     "analytics": "分析页",
     "workspace": "工作台"
+  },
+  "componentsDemo": {
+    "title": "组件演示",
+    "attachmentPreview": "附件预览",
+    "detailDrawer": "详情抽屉",
+    "emptyState": "空状态",
+    "filterForm": "筛选表单",
+    "mediaPreview": "媒体预览",
+    "timeline": "时间轴",
+    "tableLayout": "表格布局",
+    "richEditor": "富文本编辑器",
+    "detailModal": "详情弹窗",
+    "customTag": "自定义标签"
   }
 }

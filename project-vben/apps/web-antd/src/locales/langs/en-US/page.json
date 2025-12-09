@@ -10,5 +10,18 @@
     "title": "Dashboard",
     "analytics": "Analytics",
     "workspace": "Workspace"
+  },
+  "componentsDemo": {
+    "title": "Components Demo",
+    "attachmentPreview": "Attachment Preview",
+    "detailDrawer": "Detail Drawer",
+    "emptyState": "Empty State",
+    "filterForm": "Filter Form",
+    "mediaPreview": "Media Preview",
+    "timeline": "Timeline",
+    "tableLayout": "Table Layout",
+    "richEditor": "Rich Editor",
+    "detailModal": "Detail Modal",
+    "customTag": "Custom Tag"
   }
 }

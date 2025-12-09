@@ -28,31 +28,9 @@ alwaysApply: true
 - 内置搜索、筛选、快速筛选、分页功能
 - 更好的代码复用性和可维护性
 
-**✅ 正确**:
-```vue
-<script setup lang="ts">
-import { TableLayout } from '#/components/TableLayout';
-import type { ActionButton } from '#/components/TableLayout/TableHeader';
-</script>
+**组件来源**: 必须使用 `.specify/templates/project-vben/components/TableLayout/` 中的组件模板。
 
-<template>
-  <div class="page-container">
-    <TableLayout
-      title="数据列表"
-      :columns="columns"
-      :data-source="dataSource"
-      :action-buttons="actionButtons"
-    />
-  </div>
-</template>
-```
-
-**❌ 错误**:
-```vue
-<template>
-  <a-table :columns="columns" :data-source="dataSource" />
-</template>
-```
+**使用文档**: 查看 `.specify/templates/project-vben/components/README.md` 了解详细使用方法。
 
 ### 2. 详情展示必须使用 DetailModal
 
@@ -63,38 +41,9 @@ import type { ActionButton } from '#/components/TableLayout/TableHeader';
 - 表单式布局，高信息密度
 - 支持 flat 和 tabs 两种布局模式
 
-**✅ 正确**:
-```vue
-<script setup lang="ts">
-import { DetailModal } from '#/components/DetailModal';
-import type { DetailHeader } from '#/components/DetailModal';
+**组件来源**: 必须使用 `.specify/templates/project-vben/components/DetailModal/` 中的组件模板。
 
-const detailHeader = computed<DetailHeader>(() => ({
-  title: detailData.value?.title || '',
-  subtitle: detailData.value?.subtitle,
-  createdAt: detailData.value?.createdAt,
-}));
-</script>
-
-<template>
-  <DetailModal v-model:visible="visible" :header="detailHeader">
-    <template #content>
-      <div class="detail-form-container">
-        <!-- 详情内容 -->
-</div>
-    </template>
-  </DetailModal>
-</template>
-```
-
-**❌ 错误**:
-```vue
-<template>
-  <a-modal v-model:open="visible">
-    <div>{{ detailData }}</div>
-  </a-modal>
-</template>
-```
+**使用文档**: 查看 `.specify/templates/project-vben/components/README.md` 了解详细使用方法。
 
 **注意**: 新增/编辑表单弹窗仍可使用 `<a-modal>`，因为那是表单编辑场景。
 
@@ -108,45 +57,9 @@ const detailHeader = computed<DetailHeader>(() => ({
 - 自动处理文件验证、进度显示、预览下载
 - 与后端 API 完美适配
 
-**✅ 正确**:
-```vue
-<script setup lang="ts">
-import type { UploadResponse } from '#/api/core/upload';
-import { AttachmentUpload } from '#/components/AttachmentUpload';
+**组件来源**: 必须使用 `.specify/templates/project-vben/components/AttachmentUpload/` 中的组件模板。
 
-const fileList = ref<UploadResponse[]>([]);
-</script>
-
-<template>
-  <AttachmentUpload
-    v-model="fileList"
-    accept="image/*,.pdf"
-    :max-size="10"
-    :max-count="5"
-  />
-</template>
-```
-
-**❌ 错误**:
-```vue
-<template>
-  <a-upload :file-list="fileList" @change="handleUpload">
-    <a-button>上传文件</a-button>
-  </a-upload>
-</template>
-```
-
-**常用配置**:
-```vue
-<!-- 图片上传 -->
-<AttachmentUpload v-model="images" accept="image/*" :max-size="5" list-type="picture-card" />
-
-<!-- 文档上传 -->
-<AttachmentUpload v-model="documents" accept=".pdf,.doc,.docx" :max-size="10" />
-
-<!-- 单文件上传 -->
-<AttachmentUpload v-model="file" :multiple="false" :max-count="1" upload-mode="button" />
-```
+**使用文档**: 查看 `.specify/templates/project-vben/components/README.md` 了解详细使用方法。
 
 ### 4. 必须遵循 API 接口规范
 
@@ -260,54 +173,19 @@ background-color: #FF0000;
 
 ### 图标规范
 
-**规则**: 图标统一在 `src/icons/index.ts` 中管理，使用 `createIconifyIcon` 创建。
+**规则**: **必须**使用 `.specify/templates/project-vben/icons/index.ts` 中定义的图标，项目中的 `src/icons/index.ts` 应基于模板库中的图标文件。
 
-**为什么？**
-- 统一的图标管理和导入
-- 按需加载，减小打包体积
-- 易于维护和查找
+**图标来源**: `.specify/templates/project-vben/icons/index.ts`
 
-**使用方式**:
+**使用方式**: 从 `#/icons` 导入图标组件。
 
-```typescript
-// ✅ 正确：从 #/icons 导入
-import { MdiMagnify, MdiPlus, MdiClose } from '#/icons';
+**禁止使用 emoji 图标**:
+- ❌ **禁止**在代码中使用 emoji 作为图标（如 🔍、🔄、📄 等）
+- ❌ **禁止**创建返回 emoji 字符的占位符组件
+- ✅ **必须**使用模板库中定义的图标组件
+- ✅ **必须**从 `#/icons` 导入图标，统一管理
 
-// ❌ 错误：直接使用 @vben/icons
-import { MdiMagnify } from '@vben/icons';
-
-// ❌ 错误：使用原始 SVG
-import { MagnifyIcon } from '@/assets/icons/magnify.svg';
-```
-
-**添加新图标**:
-
-1. 访问 https://icon-sets.iconify.design/
-2. 搜索需要的图标（推荐 Material Design Icons - mdi）
-3. 在 `src/icons/index.ts` 中添加：
-
-```typescript
-import { createIconifyIcon } from '@vben/icons';
-
-/** 新图标说明 */
-export const MdiIconName = createIconifyIcon('mdi:icon-name');
-```
-
-**命名规范**:
-- PascalCase 命名
-- 格式：`{IconSet}{IconName}`
-- 示例：`MdiMagnify`, `LucideSearch`
-
-**推荐图标集**:
-- `mdi`: Material Design Icons（最全面，推荐）
-- `lucide`: Lucide Icons（简洁美观）
-- `carbon`: Carbon Icons（IBM设计）
-- `heroicons`: Heroicons（Tailwind官方）
-
-**风格要求**:
-- 优先使用 outline（轮廓）风格
-- 避免使用 filled（填充）风格
-- 示例：`mdi:account-outline` ✅  而非 `mdi:account` ❌
+**添加新图标**: 参考 `.specify/templates/project-vben/icons/index.ts` 中的实现方式，在项目的 `src/icons/index.ts` 中添加新图标。
 
 ### 类型安全
 
@@ -324,45 +202,51 @@ import type { ActionButton, FilterField } from '#/components/TableLayout/TableHe
 
 开发任何列表页面时，必须通过以下检查：
 
-- [ ] 是否使用了 `TableLayout` 组件？（而非 `<a-table>`）
-- [ ] 是否使用了 `DetailModal` 组件展示详情？（而非 `<a-modal>`）
-- [ ] 是否使用了 `AttachmentUpload` 组件？（而非 `<a-upload>` 或 `<input type="file">`）
+- [ ] 是否使用了 `.specify/templates/project-vben/components/TableLayout/` 中的 `TableLayout` 组件？（而非 `<a-table>`）
+- [ ] 是否使用了 `.specify/templates/project-vben/components/DetailModal/` 中的 `DetailModal` 组件展示详情？（而非 `<a-modal>`）
+- [ ] 是否使用了 `.specify/templates/project-vben/components/AttachmentUpload/` 中的 `AttachmentUpload` 组件？（而非 `<a-upload>` 或 `<input type="file">`）
+- [ ] 是否使用了 `.specify/templates/project-vben/icons/index.ts` 中定义的图标？（禁止使用 emoji 图标）
 - [ ] 页面是否有根容器元素？
-- [ ] 图标是否使用 outline 风格？
+- [ ] 图标是否从 `#/icons` 导入？
 - [ ] 是否使用了主题色变量而非硬编码颜色？
 - [ ] TypeScript 类型是否完整？
 - [ ] API 接口是否符合 Swagger 文档定义？
 
 ## 🎯 模板优先原则
 
-开发任何功能前，**必须**先查找并参考模板库中的实现：
+开发任何功能前，**必须**先查找并参考 `.specify/templates/project-vben` 模板库中的实现：
 
 ### 开发流程
 
-1. **查找模板**：使用 `read_file` 工具读取 `.specify/templates/project/README.md`
+1. **查找模板**：使用 `read_file` 工具读取 `.specify/templates/project-vben/README.md`
 2. **参考实现**：查找相关组件、API、页面模板
 3. **优先使用**：直接使用或基于模板调整，避免从零开发
 4. **保持一致**：确保实现方式与模板库保持一致
 
 ### 模板库位置
 
-- **总览文档**: `.specify/templates/project/README.md` - 完整的模板库使用手册
-- **组件模板**: `.specify/templates/project/components/` - TableLayout、DetailModal、AttachmentUpload 等
-- **页面示例**: `.specify/templates/project/pages/tag-management/` - 完整的 CRUD 实现参考
-- **API 示例**: `.specify/templates/project/api/` - 标签 API、文件上传 API
-- **详细指南**: `.specify/templates/project/docs/` - 表格生成指南、详情弹窗指南等
+- **总览文档**: `.specify/templates/project-vben/README.md` - 完整的模板库使用手册
+- **组件模板**: `.specify/templates/project-vben/components/` - TableLayout、DetailModal、AttachmentUpload 等
+  - **组件使用文档**: `.specify/templates/project-vben/components/README.md`
+- **图标模板**: `.specify/templates/project-vben/icons/index.ts` - 图标定义
+- **页面示例**: `.specify/templates/project-vben/pages/tag-management/` - 完整的 CRUD 实现参考
+- **API 示例**: `.specify/templates/project-vben/api/` - 标签 API、文件上传 API
+- **详细指南**: `.specify/templates/project-vben/docs/` - 表格生成指南、详情弹窗指南等
 
 ### 常见场景对应模板
 
 | 场景 | 必读模板 |
 |------|---------|
-| 创建列表页 | `.specify/templates/project/components/TableLayout/` + `pages/tag-management/` |
-| 展示详情 | `.specify/templates/project/components/DetailModal/` |
-| 文件上传 | `.specify/templates/project/components/AttachmentUpload/` |
-| 实现 API | `.specify/templates/project/api/tags.ts` |
-| 富文本编辑 | `.specify/templates/project/components/RichEditor/` |
+| 创建列表页 | `.specify/templates/project-vben/components/TableLayout/` + `pages/tag-management/` |
+| 展示详情 | `.specify/templates/project-vben/components/DetailModal/` |
+| 文件上传 | `.specify/templates/project-vben/components/AttachmentUpload/` |
+| 实现 API | `.specify/templates/project-vben/api/tags.ts` |
+| 富文本编辑 | `.specify/templates/project-vben/components/RichEditor/` |
+| 使用图标 | `.specify/templates/project-vben/icons/index.ts` |
 
-**重要**：遇到列表页、详情弹窗、文件上传等常见场景时，必须先查阅模板库，不要自己实现。
+**重要**：
+- 遇到列表页、详情弹窗、文件上传等常见场景时，必须先查阅模板库，不要自己实现
+- **必须**使用模板库中的组件和图标，详细使用方法请查看对应的 README 文档
 
 ## 📚 Swagger API 文档位置
 

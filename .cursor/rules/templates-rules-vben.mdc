@@ -223,15 +223,21 @@ import type { ActionButton, FilterField } from '#/components/TableLayout/TableHe
 3. **优先使用**：直接使用或基于模板调整，避免从零开发
 4. **保持一致**：确保实现方式与模板库保持一致
 
-### 模板库位置
+### 可用组件列表
 
-- **总览文档**: `.specify/templates/project-vben/README.md` - 完整的模板库使用手册
-- **组件模板**: `.specify/templates/project-vben/components/` - TableLayout、DetailModal、AttachmentUpload 等
-  - **组件使用文档**: `.specify/templates/project-vben/components/README.md`
-- **图标模板**: `.specify/templates/project-vben/icons/index.ts` - 图标定义
-- **页面示例**: `.specify/templates/project-vben/pages/tag-management/` - 完整的 CRUD 实现参考
-- **API 示例**: `.specify/templates/project-vben/api/` - 标签 API、文件上传 API
-- **详细指南**: `.specify/templates/project-vben/docs/` - 表格生成指南、详情弹窗指南等
+| 组件 | 路径 | 适用场景 |
+|------|------|---------|
+| TableLayout | `#/components/TableLayout` | 列表页（含搜索、筛选、分页） |
+| DetailModal | `#/components/DetailModal` | 弹窗式详情（简单详情） |
+| DetailDrawer | `#/components/DetailDrawer` | 抽屉式详情（复杂详情/多Tab） |
+| FilterForm | `#/components/FilterForm` | 独立筛选表单 |
+| AttachmentUpload | `#/components/AttachmentUpload` | 文件上传 |
+| AttachmentPreview | `#/components/AttachmentPreview` | 附件展示 |
+| MediaPreview | `#/components/MediaPreview` | 媒体预览（图片/视频/音频） |
+| Timeline | `#/components/Timeline` | 时间轴记录展示 |
+| CustomTag | `#/components/CustomTag` | 自定义标签 |
+| RichEditor | `#/components/RichEditor` | 富文本编辑 |
+| EmptyState | `#/components/EmptyState` | 空状态展示 |
 
 ### 常见场景对应模板
 

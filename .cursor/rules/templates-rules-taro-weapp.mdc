@@ -1,0 +1,206 @@
+---
+description: Taro Vue3 微信小程序项目开发规范
+globs:
+alwaysApply: true
+---
+
+# Taro Vue3 微信小程序开发规范
+
+本规则适用于基于 Taro 4.x + Vue 3 + TypeScript 的微信小程序项目。
+
+## 技术栈
+
+- **Taro**: 4.1.7+
+- **Vue**: 3.x（Composition API）
+- **TypeScript**: 5.x
+- **状态管理**: Pinia
+- **样式**: SCSS + CSS Variables
+- **UI 组件**: taro-ui-vue3
+
+## 生命周期钩子（⚠️ 重要）
+
+### ✅ 正确用法 - 使用 Taro 的 `use` 开头钩子
+
+```typescript
+import { useDidShow, useDidHide, useLoad, usePullDownRefresh } from '@tarojs/taro'
+
+export default {
+  setup() {
+    useLoad((options) => {
+      console.log('页面加载', options)
+    })
+
+    useDidShow(() => {
+      console.log('页面显示')
+    })
+
+    useDidHide(() => {
+      console.log('页面隐藏')
+    })
+  }
+}
+```
+
+### ❌ 错误用法 - 不要使用 `on` 开头的方法
+
+```typescript
+// 这些方法在 @tarojs/taro 中不存在！
+import { onShow, onHide, onLoad } from '@tarojs/taro' // 错误！
+```
+
+### 生命周期对照表
+
+| 小程序原生 | Taro Vue3 钩子 | 说明 |
+|-----------|---------------|------|
+| onLoad | useLoad | 页面加载 |
+| onShow | useDidShow | 页面显示 |
+| onHide | useDidHide | 页面隐藏 |
+| onReady | useReady | 页面初次渲染完成 |
+| onUnload | useUnload | 页面卸载 |
+| onPullDownRefresh | usePullDownRefresh | 下拉刷新 |
+| onReachBottom | useReachBottom | 上拉触底 |
+
+## 组件开发规范
+
+### 使用 Taro 组件
+
+```vue
+<template>
+  <view class="container">
+    <text>Hello</text>
+    <button @tap="handleClick">点击</button>
+    <image :src="imageSrc" mode="aspectFill" />
+  </view>
+</template>
+```
+
+### 页面配置
+
+每个页面需要对应的 `.config.ts` 文件：
+
+```typescript
+// pages/home/index.config.ts
+export default definePageConfig({
+  navigationBarTitleText: '首页',
+  enablePullDownRefresh: false
+})
+```
+
+## 样式规范
+
+### 使用 rpx 单位
+
+```scss
+.container {
+  padding: 32rpx;
+  font-size: 28rpx;
+  border-radius: 16rpx;
+}
+```
+
+### 使用 CSS Variables
+
+```scss
+:root {
+  --color-primary: #326292;
+  --color-text-primary: #333333;
+}
+
+.button {
+  background-color: var(--color-primary);
+  color: var(--color-text-primary);
+}
+```
+
+## 状态管理
+
+### Pinia Store
+
+```typescript
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+
+export const useUserStore = defineStore('user', () => {
+  const userInfo = ref(null)
+  const isLoggedIn = computed(() => !!userInfo.value)
+
+  const setUserInfo = (info) => {
+    userInfo.value = info
+  }
+
+  return { userInfo, isLoggedIn, setUserInfo }
+})
+```
+
+### 简单全局状态
+
+```typescript
+import { reactive, readonly } from 'vue'
+
+const state = reactive({
+  theme: 'blue'
+})
+
+export const themeState = readonly(state)
+export const setTheme = (theme) => { state.theme = theme }
+```
+
+## 网络请求
+
+使用封装的 request 函数：
+
+```typescript
+import { get, post } from '@/utils/request'
+
+// GET 请求
+const data = await get('/api/users')
+
+// POST 请求
+const result = await post('/api/login', { username, password })
+```
+
+## 导航跳转
+
+```typescript
+import Taro from '@tarojs/taro'
+
+// 普通跳转
+Taro.navigateTo({ url: '/pages/detail/index?id=1' })
+
+// Tab 页跳转
+Taro.switchTab({ url: '/pages/home/index' })
+
+// 重定向
+Taro.redirectTo({ url: '/pages/login/index' })
+```
+
+## 项目模板
+
+模板位置：`youth-ai-memory/project-taro-weapp`
+
+初始化新项目时：
+1. 复制 `project-taro-weapp` 到目标目录
+2. 修改 `package.json` 中的项目名
+3. 修改 `project.config.json` 中的 `appid` 和 `projectname`
+4. 修改 `src/config/env.ts` 中的 API 地址
+5. 执行 `pnpm install` 安装依赖
+
+## 通用组件
+
+模板包含以下通用组件：
+
+- **BottomSheet**: 底部弹窗
+- **CustomTabBar**: 自定义 TabBar
+- **DynamicForm**: 动态表单
+- **ImageLoader**: 图片加载
+- **ImageUploader**: 图片上传
+- **MarkdownView**: Markdown 渲染
+- **PageBackground**: 页面渐变背景
+- **BackgroundImage**: 背景图
+
+## 代码规范
+
+- 使用 ESLint + Stylelint
+- 使用 Commitlint 规范提交信息
+- TypeScript 严格模式
+- 避免使用 `any` 类型

@@ -1,0 +1,199 @@
+/* 全局样式系统 - Taro Vue3 模板 */
+
+/* 按需引入 taro-ui 组件样式 */
+@import "taro-ui-vue3/dist/style/components/icon.scss";
+
+/* CSS 变量定义 */
+page {
+  /* 主题色变量 - 可通过主题系统动态修改 */
+  --color-primary: #326292;
+  --color-primary-light: rgba(50, 98, 146, 0.1);
+  --color-primary-lighter: rgba(50, 98, 146, 0.08);
+  --color-primary-lightest: rgba(50, 98, 146, 0.03);
+  --color-success: #34C759;
+  --color-warning: #FF9500;
+  --color-error: #FF3B30;
+
+  /* 背景色 */
+  --color-background: #F2F2F7;
+  --color-surface: #FFFFFF;
+
+  /* 文本色 */
+  --color-text-primary: #000000;
+  --color-text-secondary: #8A8A8E;
+  --color-text-placeholder: #C7C7CC;
+
+  /* 边框和分隔线 */
+  --color-border: #E5E5EA;
+
+  /* 间距系统 - 8pt 栅格 */
+  --spacing-xs: 8rpx;
+  --spacing-sm: 16rpx;
+  --spacing-md: 24rpx;
+  --spacing-lg: 32rpx;
+  --spacing-xl: 48rpx;
+
+  /* 圆角 */
+  --radius-sm: 12rpx;
+  --radius-md: 16rpx;
+  --radius-lg: 24rpx;
+  --radius-xl: 32rpx;
+
+  /* 字体大小 */
+  --font-size-xs: 24rpx;
+  --font-size-sm: 26rpx;
+  --font-size-base: 30rpx;
+  --font-size-md: 32rpx;
+  --font-size-lg: 34rpx;
+  --font-size-xl: 64rpx;
+
+  /* 阴影 */
+  --shadow-sm: 0 4rpx 20rpx rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8rpx 32rpx rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 12rpx 48rpx rgba(0, 0, 0, 0.08);
+
+  background-color: var(--color-background);
+}
+
+/* 基础样式重置 */
+view, text, button, image, input, textarea {
+  box-sizing: border-box;
+}
+
+/* 通用容器类 */
+.container {
+  min-height: 100vh;
+  background-color: var(--color-background);
+  padding: var(--spacing-sm);
+}
+
+/* 卡片样式 */
+.card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.card-padding {
+  padding: var(--spacing-sm);
+}
+
+/* 按钮样式 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28rpx 40rpx;
+  border-radius: 20rpx;
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  transition: all 0.3s;
+  border: none;
+  min-height: 96rpx;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.12);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+}
+
+/* 标签样式 */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 8rpx 16rpx;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  line-height: 1.2;
+}
+
+.tag-primary {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.tag-success {
+  background-color: rgba(7, 193, 96, 0.1);
+  color: #07C160;
+}
+
+.tag-warning {
+  background-color: rgba(255, 149, 0, 0.1);
+  color: var(--color-warning);
+}
+
+/* 分隔线 */
+.divider {
+  height: 1rpx;
+  background-color: var(--color-border);
+}
+
+/* 文本样式 */
+.text-primary {
+  color: var(--color-text-primary);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-placeholder {
+  color: var(--color-text-placeholder);
+}
+
+.text-bold {
+  font-weight: 600;
+}
+
+/* 列表项样式 */
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 32rpx;
+  min-height: 112rpx;
+  background-color: var(--color-surface);
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.list-item:active {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.list-item::after {
+  content: '';
+  position: absolute;
+  left: 32rpx;
+  right: 32rpx;
+  bottom: 0;
+  height: 1rpx;
+  background-color: var(--color-border);
+}
+
+.list-item:last-child::after {
+  display: none;
+}
+
+/* 右箭头 */
+.arrow-right {
+  width: 14rpx;
+  height: 14rpx;
+  border-top: 2.5rpx solid var(--color-text-placeholder);
+  border-right: 2.5rpx solid var(--color-text-placeholder);
+  transform: rotate(45deg);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+

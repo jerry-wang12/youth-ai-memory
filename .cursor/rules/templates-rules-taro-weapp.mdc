@@ -192,11 +192,20 @@ Taro.redirectTo({ url: '/pages/login/index' })
 - **BottomSheet**: 底部弹窗
 - **CustomTabBar**: 自定义 TabBar
 - **DynamicForm**: 动态表单
+- **EmptyStateCard**: 空状态卡片（支持自定义图标、标题、描述和操作按钮）
 - **ImageLoader**: 图片加载
 - **ImageUploader**: 图片上传
 - **MarkdownView**: Markdown 渲染
 - **PageBackground**: 页面渐变背景
 - **BackgroundImage**: 背景图
+
+## 工具类
+
+模板包含以下工具类：
+
+- **request.ts**: HTTP 请求封装（get、post）
+- **request-cache.ts**: SWR 风格请求缓存（支持 staleTime、cacheTime 和 stale-while-revalidate）
+- **date.ts**: 日期格式化工具（formatDate、formatTime、formatActivityTime、formatDateTime、getRelativeTime）
 
 ## 代码规范
 

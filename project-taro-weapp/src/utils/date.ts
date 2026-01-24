@@ -6,32 +6,81 @@ import { useLocaleStore } from '@/stores/locale'
 
 /**
  * 格式化日期
- * @param dateStr 日期字符串
- * @returns 格式化后的日期字符串
+ * @param dateStr yyyy-MM-dd 格式的日期字符串
+ * @returns 格式化后的日期，中文：2025年3月15日，英文：Mar 15, 2025
  */
-export function formatDate(dateStr: string): string {
+export function formatDate(dateStr?: string): string {
   if (!dateStr) return ''
+  
+  try {
+    const localeStore = useLocaleStore()
+    // 避免时区偏移：手动解析 yyyy-MM-dd
+    const [y, m, d] = dateStr.split('-').map(Number)
+    if (!y || !m || !d) return dateStr
+    const year = y
+    const month = m
+    const day = d
+    
+    if (localeStore.isZh) {
+      return `${year}年${month}月${day}日`
+    } else {
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      return `${monthNames[month - 1]} ${day}, ${year}`
+    }
+  } catch (error) {
+    console.error('日期格式化失败:', error)
+    return dateStr
+  }
+}
 
-  const localeStore = useLocaleStore()
-  const date = new Date(dateStr)
+/**
+ * 格式化时间
+ * @param timeStr HH:mm:ss 格式的时间字符串
+ * @returns 格式化后的时间，如：14:00
+ */
+export function formatTime(timeStr?: string): string {
+  if (!timeStr) return ''
+  
+  try {
+    const parts = timeStr.split(':')
+    if (parts.length >= 2) return `${parts[0]}:${parts[1]}`
+    return timeStr
+  } catch (error) {
+    console.error('时间格式化失败:', error)
+    return timeStr
+  }
+}
 
-  if (isNaN(date.getTime())) return dateStr
-
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const day = date.getDate()
-
-  if (localeStore.isZh) {
-    return `${year}年${month}月${day}日`
+/**
+ * 格式化活动时间范围
+ * @param date yyyy-MM-dd 格式的日期字符串
+ * @param startTime HH:mm:ss 格式的开始时间
+ * @param endTime HH:mm:ss 格式的结束时间
+ * @returns 格式化后的时间范围，如：2025年3月15日 14:00 ~ 16:00
+ */
+export function formatActivityTime(
+  date?: string,
+  startTime?: string,
+  endTime?: string
+): string {
+  const formattedDate = formatDate(date)
+  const formattedStartTime = formatTime(startTime)
+  const formattedEndTime = formatTime(endTime)
+  
+  if (!formattedDate) return ''
+  
+  if (formattedStartTime && formattedEndTime) {
+    return `${formattedDate} ${formattedStartTime} ~ ${formattedEndTime}`
+  } else if (formattedStartTime) {
+    return `${formattedDate} ${formattedStartTime}`
   } else {
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    return `${monthNames[date.getMonth()]} ${day}, ${year}`
+    return formattedDate
   }
 }
 
 /**
  * 格式化日期时间
- * @param dateStr 日期时间字符串
+ * @param dateStr 日期时间字符串（ISO 格式或其他可解析格式）
  * @returns 格式化后的日期时间字符串
  */
 export function formatDateTime(dateStr: string): string {
@@ -125,4 +174,3 @@ export function getRelativeTime(dateStr: string): string {
 
   return formatDate(dateStr)
 }
-

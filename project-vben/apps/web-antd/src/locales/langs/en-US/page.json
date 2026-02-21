@@ -22,6 +22,10 @@
     "tableLayout": "Table Layout",
     "richEditor": "Rich Editor",
     "detailModal": "Detail Modal",
-    "customTag": "Custom Tag"
+    "customTag": "Custom Tag",
+    "flowStatusTag": "Flow Status Tag",
+    "universalUpload": "Universal Upload",
+    "fixedFooter": "Fixed Footer",
+    "auditLayout": "Audit Layout"
   }
 }

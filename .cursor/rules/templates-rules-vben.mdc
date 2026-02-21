@@ -205,6 +205,7 @@ import type { ActionButton, FilterField } from '#/components/TableLayout/TableHe
 - [ ] 是否使用了 `.specify/templates/project-vben/components/TableLayout/` 中的 `TableLayout` 组件？（而非 `<a-table>`）
 - [ ] 是否使用了 `.specify/templates/project-vben/components/DetailModal/` 中的 `DetailModal` 组件展示详情？（而非 `<a-modal>`）
 - [ ] 是否使用了 `.specify/templates/project-vben/components/AttachmentUpload/` 中的 `AttachmentUpload` 组件？（而非 `<a-upload>` 或 `<input type="file">`）
+- [ ] 审批/流程页是否优先使用 `AuditLayout`、`FlowStatusTag`、`FixedFooter`？弹窗上传是否可使用 `UniversalUpload`（注入 uploadApi）？
 - [ ] 是否使用了 `.specify/templates/project-vben/icons/index.ts` 中定义的图标？（禁止使用 emoji 图标）
 - [ ] 页面是否有根容器元素？
 - [ ] 图标是否从 `#/icons` 导入？
@@ -238,6 +239,21 @@ import type { ActionButton, FilterField } from '#/components/TableLayout/TableHe
 | CustomTag | `#/components/CustomTag` | 自定义标签 |
 | RichEditor | `#/components/RichEditor` | 富文本编辑 |
 | EmptyState | `#/components/EmptyState` | 空状态展示 |
+| **FixedFooter** | `#/components/FixedFooter` | 底部固定操作条（支持左侧偏移） |
+| **AuditLayout** | `#/components/AuditLayout` | 左内容 + 右助手面板 + 底部操作条布局 |
+| **FlowStatusTag** | `#/components/FlowStatusTag` | 流程实例状态标签（通用数据结构，可注入 nodeNameResolver） |
+| **UniversalUpload** | `#/components/UniversalUpload` | 弹窗上传（可注入 uploadApi / templateApi，无业务 API 依赖） |
+
+### 生产必用组件（推荐场景与引用）
+
+以下组件从生产沉淀、已通用化，**不依赖** `#/api/core/*`，推荐在审批/流程/上传等场景使用：
+
+- **FixedFooter**：页面底部固定操作条。需避开侧边栏时传 `left-offset`（如 `"var(--vben-sidebar-width)"` 或具体像素）。引用：`import { FixedFooter } from '#/components/FixedFooter';`
+- **AuditLayout**：审批类页面布局（主内容区 + 右侧助手/意见面板 + 底部操作条）。布局尺寸可通过 `top-offset`、`assistant-width`、`collapsed-width`、`bottom-bar-height` 调节。引用：`import { AuditLayout } from '#/components/AuditLayout';` 类型见 `#/components/AuditLayout` 的 `types.ts`。
+- **FlowStatusTag**：展示流程实例当前节点与状态。数据使用组件内定义的 `FlowInstanceLike` / `FlowDefinitionLike` 最小接口；若业务节点名与默认解析不一致，可传 `node-name-resolver`。引用：`import { FlowStatusTag } from '#/components/FlowStatusTag';`
+- **UniversalUpload**：弹窗式上传，上传与模板下载均通过 props 注入（`upload-api`、`template-api`），不引用业务 API。引用：`import { UniversalUpload } from '#/components/UniversalUpload';`
+
+详细用法见各组件目录下的 `README.md`。
 
 ### 常见场景对应模板
 

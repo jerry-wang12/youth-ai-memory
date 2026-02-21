@@ -489,6 +489,105 @@ export default defineConfig({
 
 **详细配置说明：** [`../config/vite-quill-config.md`](../config/vite-quill-config.md)
 
+### FixedFooter
+
+底部固定操作条，适用于表单/详情页底部操作区；支持 `leftOffset` 避开侧边栏。
+
+**使用示例：**
+
+```vue
+<script setup lang="ts">
+import { FixedFooter } from '#/components/FixedFooter';
+</script>
+<template>
+  <div class="page-container">
+    <div class="content">...</div>
+    <FixedFooter :left-offset="0">
+      <a-button @click="cancel">取消</a-button>
+      <a-button type="primary" @click="submit">提交</a-button>
+    </FixedFooter>
+  </div>
+</template>
+```
+
+**Props：** `leftOffset?: number | string`（左侧偏移，如侧栏宽度）
+
+### AuditLayout
+
+左内容 + 右助手面板 + 底部操作条布局，适用于审批、工单等详情页。
+
+**使用示例：**
+
+```vue
+<script setup lang="ts">
+import { AuditLayout } from '#/components/AuditLayout';
+import type { AuditResult } from '#/components/AuditLayout';
+const result: AuditResult = { status: 'PENDING', rejectTargets: [], ... };
+</script>
+<template>
+  <AuditLayout
+    :audit-result="result"
+    :top-offset="145"
+    assistant-width="400px"
+    @reject="onReject"
+    @approve="onApprove"
+  >
+    <template #main> 主内容 </template>
+    <template #assistant> 右侧助手/意见 </template>
+    <template #footer> 底部按钮 </template>
+  </AuditLayout>
+</template>
+```
+
+**Props：** `auditResult`、`topOffset`、`assistantWidth`、`collapsedWidth`、`bottomBarHeight` 等；类型见 `AuditLayout/types.ts`。
+
+### FlowStatusTag
+
+流程实例状态标签，展示当前节点与状态；数据为组件内最小类型，可传 `nodeNameResolver` 自定义节点名。
+
+**使用示例：**
+
+```vue
+<script setup lang="ts">
+import { FlowStatusTag } from '#/components/FlowStatusTag';
+import type { FlowInstanceLike, FlowDefinitionLike } from '#/components/FlowStatusTag';
+const flowInstance: FlowInstanceLike = { id: '1', status: 'RUNNING', currentNodeId: 'n1', nodeInstances: [...] };
+const flowDefinition: FlowDefinitionLike = { nodeDefinitions: { n1: { name: '提交' } } };
+</script>
+<template>
+  <FlowStatusTag :flow-instance="flowInstance" :flow-definition="flowDefinition" />
+</template>
+```
+
+**Props：** `flowInstance`、`flowDefinition`、`nodeNameResolver?: (node, flowInstance) => string`
+
+### UniversalUpload
+
+弹窗式文件上传，通过 props 注入 `uploadApi`、`templateApi`，无业务 API 依赖。
+
+**使用示例：**
+
+```vue
+<script setup lang="ts">
+import { UniversalUpload } from '#/components/UniversalUpload';
+const visible = ref(false);
+const uploadFile = async (file: File) => { /* 调用项目上传 API */ return { id: '1', url: '...' }; };
+const downloadTemplate = () => fetch('/api/template').then(r => r.blob());
+</script>
+<template>
+  <UniversalUpload
+    v-model:visible="visible"
+    title="上传文件"
+    :upload-api="uploadFile"
+    :template-api="downloadTemplate"
+    :max-size="10 * 1024 * 1024"
+    @success="onSuccess"
+  />
+</template>
+```
+
+**Props：** `visible`、`uploadApi`、`templateApi`、`accept`、`maxSize`、`maxCount`、`templateName` 等；类型见 `UniversalUpload/types.ts`。
+
 **public 目录结构：**
 
 确保项目的 `public/plugins/quill/` 目录下包含以下文件：
@@ -585,6 +684,10 @@ import { DetailDrawer } from '@/components/DetailDrawer';
 import { CustomTag } from '@/components/CustomTag';
 import { EmptyState } from '@/components/EmptyState';
 import { RichEditor } from '@/components/RichEditor';
+import { FixedFooter } from '@/components/FixedFooter';
+import { AuditLayout } from '@/components/AuditLayout';
+import { FlowStatusTag } from '@/components/FlowStatusTag';
+import { UniversalUpload } from '@/components/UniversalUpload';
 
 // 导入类型
 import type { TableLayoutProps } from '@/components/TableLayout';
@@ -667,6 +770,11 @@ import type { EmptyStateProps } from '@/components/EmptyState';
 
 // RichEditor 类型
 import type { RichEditorProps } from '@/components/RichEditor';
+
+// AuditLayout / FlowStatusTag / UniversalUpload 类型
+import type { AuditResult } from '@/components/AuditLayout';
+import type { FlowInstanceLike, FlowDefinitionLike } from '@/components/FlowStatusTag';
+import type { UniversalUploadProps, FileItem } from '@/components/UniversalUpload';
 ```
 
 ## 注意事项

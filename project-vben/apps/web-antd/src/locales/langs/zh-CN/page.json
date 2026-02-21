@@ -22,6 +22,10 @@
     "tableLayout": "表格布局",
     "richEditor": "富文本编辑器",
     "detailModal": "详情弹窗",
-    "customTag": "自定义标签"
+    "customTag": "自定义标签",
+    "flowStatusTag": "流程状态标签",
+    "universalUpload": "通用上传",
+    "fixedFooter": "固定底栏",
+    "auditLayout": "审核布局"
   }
 }

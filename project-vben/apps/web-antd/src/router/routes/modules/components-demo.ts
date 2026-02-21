@@ -102,6 +102,42 @@ const routes: RouteRecordRaw[] = [
           title: $t('page.componentsDemo.customTag'),
         },
       },
+      {
+        name: 'FlowStatusTagDemo',
+        path: '/flow-status-tag',
+        component: () => import('#/views/components-demo/flow-status-tag/index.vue'),
+        meta: {
+          icon: 'lucide:git-branch',
+          title: $t('page.componentsDemo.flowStatusTag'),
+        },
+      },
+      {
+        name: 'UniversalUploadDemo',
+        path: '/universal-upload',
+        component: () => import('#/views/components-demo/universal-upload/index.vue'),
+        meta: {
+          icon: 'lucide:upload',
+          title: $t('page.componentsDemo.universalUpload'),
+        },
+      },
+      {
+        name: 'FixedFooterDemo',
+        path: '/fixed-footer',
+        component: () => import('#/views/components-demo/fixed-footer/index.vue'),
+        meta: {
+          icon: 'lucide:panel-bottom',
+          title: $t('page.componentsDemo.fixedFooter'),
+        },
+      },
+      {
+        name: 'AuditLayoutDemo',
+        path: '/audit-layout',
+        component: () => import('#/views/components-demo/audit-layout/index.vue'),
+        meta: {
+          icon: 'lucide:clipboard-check',
+          title: $t('page.componentsDemo.auditLayout'),
+        },
+      },
     ],
   },
 ];

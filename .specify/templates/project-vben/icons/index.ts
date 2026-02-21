@@ -114,6 +114,30 @@ export const MdiArrowLeft = createIconifyIcon('mdi:arrow-left');
 /** 前进 */
 export const MdiArrowRight = createIconifyIcon('mdi:arrow-right');
 
+/** 右箭头/收起 */
+export const MdiChevronRight = createIconifyIcon('mdi:chevron-right');
+
+/** 复制 */
+export const MdiCopy = createIconifyIcon('mdi:content-copy');
+
+/** 警告圆圈 */
+export const MdiAlertCircleOutline = createIconifyIcon('mdi:alert-circle-outline');
+
+/** 帮助圆圈 */
+export const MdiHelpCircleOutline = createIconifyIcon('mdi:help-circle-outline');
+
+/** 审核通过（实心对勾） */
+export const LetsIconsCheckFill = createIconifyIcon('lets-icons:check-fill');
+
+/** 审核驳回（实心关闭） */
+export const LetsIconsCloseRoundFill = createIconifyIcon('lets-icons:close-round-fill');
+
+/** AI 灯泡 */
+export const MingcuteBulb2AiLine = createIconifyIcon('mingcute:bulb-2-ai-line');
+
+/** 转交 */
+export const MingcuteTransfer3Fill = createIconifyIcon('mingcute:transfer-3-fill');
+
 /**
  * 如何添加新图标：
  *

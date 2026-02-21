@@ -1,0 +1,76 @@
+---
+alwaysApply: true
+---
+
+# 配合 Skills 使用的 Vben 开发规范
+
+本 rules 与 `.cursor/skills/` 中的 Skills 配合使用：**组件实现**按 Skill 的 `SKILL.md` 及 reference/examples 执行；默认使用 `vben-components` 总入口，安装 pack 后可按细粒度 Skill 执行。
+
+## 约束（必须遵守）
+
+- **列表页**：必须使用 `TableLayout`，禁止直接用 `<a-table>`
+- **详情展示**：必须使用 `DetailModal` / `DetailDrawer`，禁止用裸 `<a-modal>` 展示详情
+- **文件上传**：必须使用 `AttachmentUpload` / `UniversalUpload`，禁止 `<a-upload>` 或 `<input type="file">`
+- **图标**：必须从 `#/icons` 导入，禁止使用 emoji 作图标
+- **页面根容器**：使用 `TableLayout` 的页面必须有根容器 `<div class="page-container">`；所有页面组件必须有根容器元素，避免 Vue Transition 警告。
+
+## 组件与适用场景（与 vben-components 一致）
+
+以下组件必须使用模板库实现，具体用法见 `.cursor/skills/vben-components/references/` 或对应 Skill：
+
+| 场景 | 组件 |
+|------|------|
+| 列表页 CRUD | TableLayout |
+| 详情弹窗 | DetailModal |
+| 详情抽屉 | DetailDrawer |
+| 文件上传 | AttachmentUpload / UniversalUpload |
+| 附件展示 | AttachmentPreview |
+| 媒体全屏预览 | MediaPreview |
+| 时间轴 | Timeline |
+| 独立筛选表单 | FilterForm |
+| 空状态 | EmptyState |
+| 标签 | CustomTag |
+| 富文本 | RichEditor |
+| 审批/流程布局 | AuditLayout, FlowStatusTag, FixedFooter |
+| 图标 | 从 `#/icons` 导入 |
+
+## 样式规范
+
+- **主题色**：使用主题色变量 `hsl(var(--primary))`，方便主题切换，**禁止**硬编码颜色。
+- **色系**：优先使用 Morandi 柔和色系；避免亮红色、亮橙色等过于鲜艳的颜色。
+
+```css
+/* ✅ 推荐 */
+background-color: hsl(var(--primary));
+
+/* ❌ 避免 */
+background-color: #FF0000;
+```
+
+## 图标规范
+
+- **必须**从 `#/icons` 导入图标组件，统一管理。
+- **禁止**在代码中使用 emoji 作为图标（如 🔍、🔄、📄 等）或创建返回 emoji 的占位符组件。
+
+## 类型安全
+
+- **必须**：所有组件 props 必须有 TypeScript 类型定义；所有 API 请求和响应必须有类型定义。
+- **推荐**：使用 `import type` 导入类型。
+
+```typescript
+import type { TableLayoutProps } from '#/components/TableLayout';
+import type { ActionButton, FilterField } from '#/components/TableLayout/TableHeader';
+```
+
+## 对应 Skills（组件具体做法）
+
+当需要实现列表页、详情弹窗、文件上传、审批流程、图标等场景时，按对应 Skill 的 `SKILL.md` 及 reference/examples 执行：
+
+- `vben-components`
+
+## 使用说明
+
+1. 将本文件复制到目标项目的 `.cursor/rules/`（如 `rules.vben-skills.mdc`）
+2. 确保 `.cursor/skills/` 中存在上述 Skill 目录
+3. 将 rules 的 `alwaysApply` 设为 `true` 或在 globs 中限定到管理端代码目录
+4. 可选：`node scripts/install-skill-pack.mjs --pack vben-components` 安装细粒度组件 Skills；`node scripts/uninstall-skill-pack.mjs --pack vben-components` 卸载恢复精简。
